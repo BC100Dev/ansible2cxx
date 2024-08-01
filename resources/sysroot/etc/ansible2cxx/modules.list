@@ -1,0 +1,13 @@
+# The library file name (LibraryName) is expected to be in one of these locations:
+# in LD_LIBRARY_PATH and PATH environments,
+# or in the current working directory.
+
+# For modders, you will need to link against "ansible2cxx-api" and "ansible2cxx-pkg_api" libraries.
+
+# Format:
+# LibraryName ModuleName CxxMethod
+
+# Example to link an additional module list file:
+# @custom_modules.list
+
+libansible2cxx-api.so copy Ansible2Cxx::API::Builtin::Modules::[CopyFile]

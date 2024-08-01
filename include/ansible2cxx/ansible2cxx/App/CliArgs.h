@@ -14,6 +14,8 @@
 #define OUTPUT_ARCH_RISCV64 "arch:riscv64"
 #define OUTPUT_ARCH_UNKNOWN "arch:?"
 
+#define COMPILER_UNKNOWN "__unknownCompiler__"
+
 enum GccLanguage {
 
     C,

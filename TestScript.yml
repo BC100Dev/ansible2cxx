@@ -1,0 +1,34 @@
+# yes, I've been working with Raspberry Pi's in the last months.
+# If you have been looking through my profile and stuff, you'll
+# know that I am a trainee, and I was playing (working) with
+# Raspberry Pi's, especially with building a custom RPI kernel and
+# other stuff.
+
+- name: Network Configuration
+  hosts: raspberrypi
+  user: root
+
+  tasks:
+    - name: write dhcpcd configuration
+      copy:
+        backup: true
+        src: raspberrypi-dhcpcd.conf
+        dest: /etc/dhcpcd.conf
+        owner: root
+        group: netdev
+        mode: 0664
+    - name: write network configuration
+      copy:
+        backup: true
+        src: GuestWifi.nmconnection
+        dest: /etc/NetworkManager/system-connections/example_net_file.nmconnection
+        owner: root
+        group: root
+        mode: 0600
+      notify: guest network refresh
+
+  handlers:
+    - name: guest network refresh
+      service:
+        name: NetworkManager
+        state: reloaded

@@ -1,5 +1,30 @@
 #include <ansible2cxx/App/CliArgs.h>
 #include <ansible2cxx/Globals.h>
+#include <ansible2cxx/Utils/Utils.h>
+
+#include <filesystem>
+
+namespace fs = std::filesystem;
+
+using namespace Application::Utils;
+
+
+std::string findCompilerByName(const std::string& name, bool cppCompiler) {
+    std::vector<std::string> pathEnv = PathEnv();
+
+    for (const std::string& pathItem : pathEnv) {
+        if (fs::exists(pathItem) && fs::is_directory(pathItem)) {
+            std::string _path = pathItem;
+            _path.append("/").append(name).append(cppCompiler ? "g++" : "gcc");
+
+            if (fs::exists(_path)) {
+                return _path;
+            }
+        }
+    }
+
+    return "";
+}
 
 
 std::string GetRunningArchitecture() {
@@ -22,8 +47,18 @@ std::string GetRunningArchitecture() {
 
 std::string GetDefaultCompiler() {
     std::string arch = GetRunningArchitecture();
-    //if (arch == OUTPUT_ARCH_ARM64)
-    return "";
+    std::string compiler;
+
+    if (arch == OUTPUT_ARCH_ARM64)
+        compiler = findCompilerByName("x86_64-linux-gnu-", Application::CommandArgs::GCC_LANG == CPP);
+    else if (arch == OUTPUT_ARCH_ARM64)
+        compiler = findCompilerByName("aarch64-linux-gnu-", Application::CommandArgs::GCC_LANG == CPP);
+    else if (arch == OUTPUT_ARCH_RISCV64)
+        compiler = findCompilerByName("riscv64-linux-gnu-", Application::CommandArgs::GCC_LANG == CPP);
+    else
+        compiler = COMPILER_UNKNOWN;
+
+    return compiler;
 }
 
 namespace Application::CommandArgs {

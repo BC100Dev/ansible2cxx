@@ -35,7 +35,9 @@ message(\"-- Setting C compiler to $ABS_PATH_GCC\")
 set(CMAKE_C_COMPILER \"$ABS_PATH_GCC\")
 
 message(\"-- Setting C++ compiler to $ABS_PATH_GPP\")
-set(CMAKE_CXX_COMPILER \"$ABS_PATH_GPP\")" > "$FILE_OUT"
+set(CMAKE_CXX_COMPILER \"$ABS_PATH_GPP\")
+
+set(APP_SYSTEM_TARGET \"Linux\")" > "$FILE_OUT"
 
 if [ -f "$FILE_OUT" ]; then
     echo "Toolchain file created successfully."
