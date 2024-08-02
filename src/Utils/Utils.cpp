@@ -1,5 +1,6 @@
 #include <ansible2cxx/Utils/Utils.h>
 #include <sstream>
+#include <ctime>
 
 namespace Application::Utils {
 
@@ -37,6 +38,20 @@ namespace Application::Utils {
 
     bool StringStartsWith(const std::string &str, const std::string &prefix) {
         return str.substr(0, prefix.size()) == prefix;
+    }
+
+    std::string ReadFile(const std::string& filePath) {
+        return "";
+    }
+
+    int GetRandomInteger(int min, int max) {
+        std::srand(static_cast<unsigned int>(std::time(nullptr)));
+        return std::rand() % (max - min + 1) + min;
+    }
+
+    long GetRandomLong(long min, long max) {
+        std::srand(static_cast<unsigned int>(std::time(nullptr)));
+        return std::rand() % (max - min + 1) + min;
     }
 
 }
