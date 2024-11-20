@@ -1,5 +1,5 @@
-#ifndef ANSIBLE2CXX_CLIARGS_H
-#define ANSIBLE2CXX_CLIARGS_H
+#ifndef ANSIBLE2CXX_CLIARGS_HPP
+#define ANSIBLE2CXX_CLIARGS_HPP
 
 #include <string>
 
@@ -44,4 +44,4 @@ namespace Application::CommandArgs {
 
 }
 
-#endif //ANSIBLE2CXX_CLIARGS_H
+#endif //ANSIBLE2CXX_CLIARGS_HPP

@@ -1,11 +1,9 @@
 #include <iostream>
 
-#include <ansible2cxx/App/CliArgs.h>
-#include <ansible2cxx/Utils/HelpPage.h>
-#include <ansible2cxx/Utils/Utils.h>
+#include <ansible2cxx/App/CliArgs.hpp>
+#include <ansible2cxx/Utils/HelpPage.hpp>
 
 using namespace Application::CommandArgs;
-using namespace Application::Utils;
 
 
 void displayHelp() {
@@ -20,19 +18,12 @@ void displayHelp() {
                 "Run the Ansible script on C/C++ level without compiling (interpret the script)");
     page.addArg("-lsh | --library-shared", "", "Build the C/C++ as a shared library instead of an executable");
     page.addArg("-lst | --library-static", "", "Build the C/C++ as a static library instead of an executable");
-    page.addArg("-rf", "[ScriptFlags]", "Appends flags to the Program Runtime"); // did I scare you already? iykyk
-    page.addArg("-cf", "[CreationFlags]", "Appends flags to the Program Creation");
     page.addArg("--source-dir", "[SRC_DIR]", "Puts the source code for manual compilation with CMake");
     page.addArg("--gcc-flags", "[FLAGS]", "Add additional flags to the C/C++ compiler");
     page.addArg("--gcc-version", "[VER]", "Specify the C/C++ version (default: C++17,C11)");
     page.addArg("--gcc-lang", "[LANG]", "Puts the source code in either C or C++ (default: C++)");
     page.display(std::cout);
     page.free();
-
-    if (GetRandomInteger(0, 5000) == 1983) {
-        // do you get it? "the bite of '83"?
-        std::cout << "did I scare you with that '-rf' flag?" << std::endl;
-    }
 
     std::cout << std::endl;
 

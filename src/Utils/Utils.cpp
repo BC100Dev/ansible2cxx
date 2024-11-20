@@ -1,8 +1,35 @@
-#include <ansible2cxx/Utils/Utils.h>
+#include "ansible2cxx/Utils/Utils.hpp"
 #include <sstream>
 #include <ctime>
+#include <string>
+#include <iostream>
+#include <stdexcept>
 
 namespace Application::Utils {
+
+#ifdef _WIN32
+    std::string PATH_SEP_DELIM_STR = ";";
+    char PATH_SEP_DELIM = ';';
+#else
+    std::string PATH_SEP_DELIM_STR = ":";
+    char PATH_SEP_DELIM = ':';
+#endif
+
+    std::vector<std::string> Split(const std::string &str, const std::string &delim) {
+        std::vector<std::string> items;
+        size_t start = 0;
+        size_t end = str.find(delim);
+
+        while (end != std::string::npos) {
+            items.push_back(str.substr(start, end - start));
+            start = end + delim.length();
+            end = str.find(delim, start);
+        }
+
+        items.push_back(str.substr(start));
+
+        return items;
+    }
 
     std::vector<std::string> PathEnv() {
         std::vector<std::string> items;
@@ -12,45 +39,33 @@ namespace Application::Utils {
             return items;
 
         std::string pathString(pathEnv);
-        char delim;
+        std::string delim;
 
 #ifdef _WIN32
-        delim = ';';
+        delim = ";";
 #else
-        delim = ':';
+        delim = ":";
 #endif
 
-        if (pathString.find(delim) == std::string::npos) {
-            items.push_back(pathString);
-            return items;
-        }
-
-        std::stringstream ss(pathString);
-        std::string _path;
-
-        while (std::getline(ss, _path, delim)) {
-            if (!_path.empty())
-                items.push_back(_path);
-        }
-
-        return items;
+        return Split(pathString, delim);
     }
 
     bool StringStartsWith(const std::string &str, const std::string &prefix) {
         return str.substr(0, prefix.size()) == prefix;
     }
 
-    std::string ReadFile(const std::string& filePath) {
-        return "";
+    bool StringEndsWith(const std::string &str, const std::string &suffix) {
+        if (suffix.size() > str.size()) return false;
+        return str.substr(str.size() - suffix.size()) == suffix;
     }
 
     int GetRandomInteger(int min, int max) {
-        std::srand(static_cast<unsigned int>(std::time(nullptr)));
+        std::srand(static_cast<int>(std::time(nullptr)));
         return std::rand() % (max - min + 1) + min;
     }
 
     long GetRandomLong(long min, long max) {
-        std::srand(static_cast<unsigned int>(std::time(nullptr)));
+        std::srand(static_cast<int>(std::time(nullptr)));
         return std::rand() % (max - min + 1) + min;
     }
 

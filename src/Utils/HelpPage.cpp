@@ -1,4 +1,4 @@
-#include <ansible2cxx/Utils/HelpPage.h>
+#include <ansible2cxx/Utils/HelpPage.hpp>
 #include <algorithm>
 
 HelpPage::Item::Item(std::string& a, std::string& e, std::string& d) : arg(a), equalDesc(e), description(d) {}

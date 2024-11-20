@@ -1,6 +1,6 @@
-#include <ansible2cxx/App/CliArgs.h>
-#include <ansible2cxx/Globals.h>
-#include <ansible2cxx/Utils/Utils.h>
+#include <ansible2cxx/App/CliArgs.hpp>
+#include <ansible2cxx/Globals.hpp>
+#include "ansible2cxx/Utils/Utils.hpp"
 
 #include <filesystem>
 
@@ -17,9 +17,8 @@ std::string findCompilerByName(const std::string& name, bool cppCompiler) {
             std::string _path = pathItem;
             _path.append("/").append(name).append(cppCompiler ? "g++" : "gcc");
 
-            if (fs::exists(_path)) {
+            if (fs::exists(_path))
                 return _path;
-            }
         }
     }
 

@@ -1,5 +1,5 @@
-#ifndef ANSIBLE2CXX_GLOBALS_H
-#define ANSIBLE2CXX_GLOBALS_H
+#ifndef ANSIBLE2CXX_GLOBALS_HPP
+#define ANSIBLE2CXX_GLOBALS_HPP
 
 #if defined(__riscv) && (__riscv_xlen == 64)
 #define SYSTEM_RISCV64
@@ -13,4 +13,4 @@
 #define SYSTEM_ARM64
 #endif
 
-#endif //ANSIBLE2CXX_GLOBALS_H
+#endif //ANSIBLE2CXX_GLOBALS_HPP

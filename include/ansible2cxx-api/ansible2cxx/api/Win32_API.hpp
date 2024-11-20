@@ -1,7 +1,7 @@
-#ifndef ANSIBLE2CXX_WIN32_API_H
-#define ANSIBLE2CXX_WIN32_API_H
+#ifndef ANSIBLE2CXX_WIN32_API_HPP
+#define ANSIBLE2CXX_WIN32_API_HPP
 
-#include <ansible2cxx/api/API.h>
+#include "API.hpp"
 
 namespace Ansible2Cxx::API::Win32 {
 
@@ -56,4 +56,4 @@ namespace Ansible2Cxx::API::Win32 {
 
 }
 
-#endif //ANSIBLE2CXX_WIN32_API_H
+#endif //ANSIBLE2CXX_WIN32_API_HPP

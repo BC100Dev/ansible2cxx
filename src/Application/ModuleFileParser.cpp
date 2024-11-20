@@ -1,4 +1,4 @@
-#include <ansible2cxx/App/ModuleFileParser.h>
+#include <ansible2cxx/App/ModuleFileParser.hpp>
 
 namespace Ansible2Cxx {
 

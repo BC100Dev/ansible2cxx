@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.20)
 project(ansible2cxx VERSION 1.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # available toolchains out of the box (see "toolchains" directory):
 # Linux_amd64        = x86_64 / AMD64 / x64 Architectures
@@ -40,46 +43,24 @@ file(GLOB LOCAL_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/include/*")
 include_directories(${LOCAL_INCLUDE_DIRS})
 include_directories(external/yaml-cpp/include)
 
-file(GLOB_RECURSE UTIL_SOURCES "${CMAKE_SOURCE_DIR}/src/Utils/**.cpp" "${CMAKE_SOURCE_DIR}/src/Utils/**/*.cpp")
-file(GLOB_RECURSE APP_SOURCES "${CMAKE_SOURCE_DIR}/src/Application/**.cpp" "${CMAKE_SOURCE_DIR}/src/Application/**/*.cpp")
+file(GLOB_RECURSE Ansible2Cxx_UTIL_SOURCES "${CMAKE_SOURCE_DIR}/src/Utils/**.cpp" "${CMAKE_SOURCE_DIR}/src/Utils/**/*.cpp")
+file(GLOB_RECURSE Ansible2Cxx_APP_SOURCES "${CMAKE_SOURCE_DIR}/src/Application/**.cpp" "${CMAKE_SOURCE_DIR}/src/Application/**/*.cpp" "${CMAKE_SOURCE_DIR}/src/Application/**/*.h" "${CMAKE_SOURCE_DIR}/src/Application/**/*.hpp")
 
-add_library(ansible2cxx-utils STATIC "${UTIL_SOURCES}")
+add_library(ansible2cxx-utils STATIC "${Ansible2Cxx_UTIL_SOURCES}")
+
+file(GLOB_RECURSE Ansible2Cxx_PkgAPI_SOURCES "${CMAKE_SOURCE_DIR}/src/PkgAPI/**.cpp")
+add_library(ansible2cxx-pkg_api STATIC "${Ansible2Cxx_PkgAPI_SOURCES}")
+target_link_libraries(ansible2cxx-pkg_api PRIVATE ansible2cxx-utils)
 
 file(GLOB_RECURSE Ansible2Cxx_API_SOURCES "${CMAKE_SOURCE_DIR}/src/API/**.cpp")
 add_library(ansible2cxx-api STATIC "${Ansible2Cxx_API_SOURCES}")
-target_link_libraries(ansible2cxx-api PRIVATE ansible2cxx-utils)
+target_link_libraries(ansible2cxx-api PRIVATE ansible2cxx-utils ansible2cxx-pkg_api)
 
-add_executable(ansible2cxx "${APP_SOURCES}")
-target_link_libraries(ansible2cxx PRIVATE ansible2cxx-utils yaml-cpp)
-
-if (${APP_SYSTEM_ARCH} STREQUAL "x86_64")
-    if (${APP_SYSTEM_TARGET} STREQUAL "Linux")
-        find_package(Qt6 REQUIRED COMPONENTS Widgets Core)
-        include_directories(${Qt6Widgets_INCLUDE_DIRS} ${Qt5Core_INCLUDE_DIRS})
-    endif ()
-
-    file(GLOB_RECURSE APP_GUI_WIN64_SOURCES "${CMAKE_SOURCE_DIR}/src/ApplicationGUI/Win64/**.cpp" "${CMAKE_SOURCE_DIR}/src/ApplicationGUI/Win64/**/*.cpp")
-    file(GLOB_RECURSE APP_GUI_LINUX_SOURCES "${CMAKE_SOURCE_DIR}/src/ApplicationGUI/Qt/**.cpp" "${CMAKE_SOURCE_DIR}/src/ApplicationGUI/Qt/**/*.cpp")
-    file(GLOB APP_GUI_GLOB_SOURCES "${CMAKE_SOURCE_DIR}/src/ApplicationGUI/**.cpp" "${CMAKE_SOURCE_DIR}/src/ApplicationGUI/**.h")
-
-    set(APP_GUI_SOURCES ${APP_GUI_GLOB_SOURCES})
-
-    if ("${APP_SYSTEM_TARGET}" STREQUAL "Linux")
-        list(APPEND APP_GUI_SOURCES ${APP_GUI_LINUX_SOURCES})
-    elseif ("${APP_SYSTEM_TARGET}" STREQUAL "Win64")
-        list(APPEND APP_GUI_SOURCES ${APP_GUI_WIN64_SOURCES})
-    endif ()
-
-    add_executable(ansible2cxx-gui "${APP_GUI_SOURCES}")
-    target_link_libraries(ansible2cxx-gui PRIVATE ansible2cxx-utils yaml-cpp)
-
-    if (${APP_SYSTEM_TARGET} STREQUAL "Linux")
-        target_link_libraries(ansible2cxx-gui PRIVATE Qt6::Widgets Qt6::Core)
-    endif ()
-endif ()
+add_executable(ansible2cxx "${Ansible2Cxx_APP_SOURCES}")
+target_link_libraries(ansible2cxx PRIVATE ansible2cxx-pkg_api ansible2cxx-api ansible2cxx-utils yaml-cpp)
 
 if (EXISTS "${CMAKE_SOURCE_DIR}/src/TestCode.cpp")
-    message("$ Found TestCode.cpp")
+    message(STATUS "Found TestCode.cpp")
     add_executable(ansible2cxx-test "src/TestCode.cpp")
     target_link_libraries(ansible2cxx-test PRIVATE ansible2cxx-utils yaml-cpp)
 endif ()

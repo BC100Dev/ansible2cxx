@@ -1,34 +1,21 @@
-# yes, I've been working with Raspberry Pi's in the last months.
-# If you have been looking through my profile and stuff, you'll
-# know that I am a trainee, and I was playing (working) with
-# Raspberry Pi's, especially with building a custom RPI kernel and
-# other stuff.
+- name: Service Setup
+  hosts: localhost
+  become: yes
 
-- name: Network Configuration
-  hosts: raspberrypi
-  user: root
+  vars:
+    path_root_services: "/usr/lib/systemd"
+    path_root_enabled_services: "/etc/systemd/system"
 
   tasks:
-    - name: write dhcpcd configuration
+    - name: Systemd Service Copy
       copy:
-        backup: true
-        src: raspberrypi-dhcpcd.conf
-        dest: /etc/dhcpcd.conf
-        owner: root
-        group: netdev
-        mode: 0664
-    - name: write network configuration
-      copy:
-        backup: true
-        src: GuestWifi.nmconnection
-        dest: /etc/NetworkManager/system-connections/example_net_file.nmconnection
+        src: simple-ansible2cxx.service
+        dest: "{{ path_root_services }}/system/simple-ansible2cxx.service"
         owner: root
         group: root
-        mode: 0600
-      notify: guest network refresh
-
-  handlers:
-    - name: guest network refresh
-      service:
-        name: NetworkManager
-        state: reloaded
+        mode: 0644
+    - name: Manually enabling Systemd Service
+      file:
+        src: "{{ path_root_services }}/system/simple-ansible2cxx.service"
+        dest: "{{ path_root_enabled_services }}/multi-user.target.wants/simple-ansible2cxx.service"
+        state: link
